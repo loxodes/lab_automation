@@ -12,25 +12,31 @@ class Gigatronics2520A():
         else:
             self.gpib = prologix
 
-        self.gpib.select(gpib_addr)
+        self.gpib_addr = gpib_addr
+
+        self.gpib.select(self.gpib_addr)
         self.gpib.write('*RST')
         assert '2520A' in self.gpib.query('*IDN?')
 
     def set_cw_frequency(self, freq):
+        self.gpib.select(self.gpib_addr)
         self.gpib.write('SOURCE:FREQUENCY:FIX {}HZ'.format(str(int(freq))))
         f_readback = float(self.gpib.query('SOURCE:FREQUENCY?'))
         assert f_readback == freq
 
     def set_cw_power(self, power_dbm):
+        self.gpib.select(self.gpib_addr)
         self.gpib.write('SOURCE:POWER:LEVEL:IMM:AMPLITUDE {}DBM'.format(str(int(power_dbm))))
         p_readback = float(self.gpib.query('SOURCE:POWER:LEVEL:IMM:AMPLITUDE?'))
         assert int(p_readback) == power_dbm
 
     def output_on(self):
+        self.gpib.select(self.gpib_addr)
         self.gpib.write('OUTPUT ON')
         assert float(self.gpib.query('OUTPUT:STATE?')) == 1
 
     def output_off(self):
+        self.gpib.select(self.gpib_addr)
         self.gpib.write('OUTPUT OFF')
         assert float(self.gpib.query('OUTPUT:STATE?')) == 0
 
