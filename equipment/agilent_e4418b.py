@@ -46,8 +46,8 @@ class AgilentE4418B():
         self.gpib.write('SENS:FREQ {}HZ'.format(str(int(freq))))
         f_readback = float(self.gpib.query('SENS:FREQ?'))
         assert f_readback == freq 
-        self.gpib.write('INIT1')
-        time.sleep(10) # TODO: come up with a better way of doing this..
+        self.gpib.write('INIT1;*WAI')
+        time.sleep(1) # TODO: come up with a better way of doing this..
         return float(self.gpib.query('FETC1?'))
 
 
